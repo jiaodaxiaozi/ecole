@@ -3,11 +3,17 @@ cmake_minimum_required(VERSION 3.5)
 add_executable(
 	benchmark-libecole
 	src/main.cpp
+	src/scip/bench-model.cpp
 )
 
 target_compile_definitions(
-	benchmark-libecole PRIVATE CATCH_CONFIG_ENABLE_BENCHMARKING
+	benchmark-libecole
+	PRIVATE
+		CATCH_CONFIG_ENABLE_BENCHMARKING
+		TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../tests/data"
 )
+
+target_include_directories(benchmark-libecole PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 conan_cmake_run(
 	CONANFILE conanfile.txt
@@ -26,7 +32,7 @@ target_link_libraries(
 		Ecole::libecole
 		Ecole::warnings
 		Ecole::sanitizers
-		CONAN_PKG::catch2
+		CONAN_PKG::benchmark
 )
 
 set_target_properties(benchmark-libecole PROPERTIES

@@ -1,5 +1,5 @@
 [requires]
-catch2/[~=2.12]
+benchmark/[~=1.5]
 
 [generators]
 cmake
