@@ -4,6 +4,7 @@ add_executable(
 	benchmark-libecole
 	src/main.cpp
 	src/scip/bench-model.cpp
+	src/bench-observation.cpp
 )
 
 target_compile_definitions(
