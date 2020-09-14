@@ -2,11 +2,13 @@
 
 #include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
+#include <scip/var.h>
 
 #include "ecole/scip/model.hpp"
 #include "ecole/scip/scimpl.hpp"
 
 #include "core.hpp"
+#include "span_bind.hpp"
 
 namespace ecole::scip {
 
@@ -16,6 +18,9 @@ void bind_submodule(py::module_ const& m) {
 	m.doc() = "Scip wrappers for ecole.";
 
 	py::register_exception<scip::Exception>(m, "Exception");
+
+	py::class_<scip::Var> py_variable(m, "Variable");
+	bind_span<nonstd::span<Var*>>(m, "VariableView");
 
 	py::class_<Model, std::shared_ptr<Model>>(m, "Model")  //
 		.def_static("from_file", &Model::from_file, py::arg("filepath"), py::call_guard<py::gil_scoped_release>())
@@ -63,6 +68,11 @@ void bind_submodule(py::module_ const& m) {
 		.def("presolve", &Model::presolve, py::call_guard<py::gil_scoped_release>())
 		.def("solve", &Model::solve, py::call_guard<py::gil_scoped_release>())
 		.def("is_solved", &Model::is_solved);
+
+		.def_property_readonly("lp_branch_cands", &Model::lp_branch_cands)
+		.def("solve_iter", &Model::solve_iter)
+		.def("solve_iter_is_done", &Model::solve_iter_is_done, py::call_guard<py::gil_scoped_release>())
+		.def("solve_iter_branch", &Model::solve_iter_branch);
 }
 
 }  // namespace ecole::scip

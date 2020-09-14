@@ -135,3 +135,11 @@ def test_presolve(model):
 @pytest.mark.slow
 def test_presolve(model):
     model.solve()
+
+
+@pytest.mark.slow
+def test_solve_iter(model):
+    model.solve_iter()
+    while not model.solve_iter_is_done():
+        model.solve_iter_branch(model.lp_branch_cands[0])
+    assert model.is_solved()
