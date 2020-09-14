@@ -4,6 +4,8 @@ import google_benchmark as benchmark
 import pyscipopt
 
 import ecole
+from index_branchrule import IndexBranchrule
+
 
 TEST_SOURCE_DIR = pathlib.Path(__file__).parent.resolve()
 DATA_DIR = TEST_SOURCE_DIR / "../../libecole/tests/data"
@@ -60,6 +62,22 @@ def ecole_reverse_control(model):
     model.solve_iter()
     while not model.solve_iter_is_done():
         model.solve_iter_branch(model.lp_branch_cands[0])
+
+
+@benchmark_model_solving
+def pyscipopt_branchrule(model):
+    pyscipopt_model = model.as_pyscipopt()
+    pyscipopt_model.includeBranchrule(
+        IndexBranchrule(pyscipopt_model, 0),
+        "IndexBranchrule",
+        "Branch on first LP branch cand",
+        priority=536870911,
+        maxdepth=-1,
+        maxbounddist=1.0,
+    )
+    # Call `SCIPsolve` from PySCIPOpt because Ecole releases the GIL which is invalid if the Branchrule is written in
+    # Python.
+    pyscipopt_model.optimize()
 
 
 if __name__ == "__main__":

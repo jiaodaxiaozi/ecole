@@ -49,14 +49,14 @@ BENCHMARK(ecole_reverse_control)  // NOLINT(cert-err58-cpp)
 	->UseRealTime()
 	->Unit(benchmark::kMillisecond);
 
-auto scip_branch_rule(benchmark::State& state) {
+auto scip_branchrule(benchmark::State& state) {
 	benchmark_solve(state, [](auto& model) {
 		auto branch_rule = std::make_unique<ecole::scip::IndexBranchrule>(model.get_scip_ptr(), "FirstVarBranching", 0UL);
 		SCIPincludeObjBranchrule(model.get_scip_ptr(), branch_rule.release(), true);
 		model.solve();
 	});
 }
-BENCHMARK(scip_branch_rule)  // NOLINT(cert-err58-cpp)
+BENCHMARK(scip_branchrule)  // NOLINT(cert-err58-cpp)
 	->MeasureProcessCPUTime()
 	->UseRealTime()
 	->Unit(benchmark::kMillisecond);
