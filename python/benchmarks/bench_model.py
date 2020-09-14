@@ -23,7 +23,7 @@ def get_model():
 
 
 def benchmark_model_solving(func_to_bench):
-    @benchmark.register
+    @benchmark.register(name=func_to_bench.__name__)
     @benchmark.option.measure_process_cpu_time()
     @benchmark.option.use_real_time()
     @benchmark.option.unit(benchmark.kMillisecond)
@@ -40,6 +40,7 @@ def benchmark_model_solving(func_to_bench):
 
             n_nodes += model.as_pyscipopt().getNNodes()  # FIXME different from C++
             n_lp_iterations += model.as_pyscipopt().getNLPIterations()  # FIXME Not all nodes
+            state.resume_timing()
 
         state.counters["Nodes"] = benchmark.Counter(n_nodes, benchmark.Counter.kAvgIterations)
         state.counters["LP Iterations"] = benchmark.Counter(
@@ -58,8 +59,7 @@ def presolve(model):
 def ecole_reverse_control(model):
     model.solve_iter()
     while not model.solve_iter_is_done():
-        # FIXME no variables
-        model.solve_iter_branch()
+        model.solve_iter_branch(model.lp_branch_cands[0])
 
 
 if __name__ == "__main__":

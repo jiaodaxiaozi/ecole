@@ -20,6 +20,7 @@ template <typename Func> auto benchmark_solve(benchmark::State& state, Func&& fu
 
 		n_nodes += SCIPgetNTotalNodes(model.get_scip_ptr());
 		n_lp_iterations += SCIPgetNLPIterations(model.get_scip_ptr());
+		state.ResumeTiming();
 	}
 
 	using benchmark::Counter;

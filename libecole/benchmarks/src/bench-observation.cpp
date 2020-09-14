@@ -28,8 +28,8 @@ template <typename ObsFunc> auto benchmark_observation(benchmark::State& state, 
 			state.PauseTiming();
 		}
 
-		state.PauseTiming();
 		n_nodes += SCIPgetNTotalNodes(model.get_scip_ptr());
+		state.ResumeTiming();
 	}
 
 	using benchmark::Counter;
