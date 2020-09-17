@@ -10,9 +10,9 @@ From: continuumio/miniconda3
 	conda.yaml
 
 %post
-	/opt/conda/bin/conda update -n base -c defaults conda
-	/opt/conda/bin/conda env create -n ecole --file conda.yaml
-	/opt/conda/bin/conda install -n ecole -c conda-forge gxx_linux-64
+	/opt/conda/bin/conda update --name base --channel defaults conda
+	/opt/conda/bin/conda create --name ecole --channel conda-forge gxx_linux-64
+	/opt/conda/bin/conda env update --name ecole --file conda.yaml
 	/opt/conda/bin/conda clean --all
 	rm conda.yaml
 

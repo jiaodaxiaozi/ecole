@@ -38,3 +38,8 @@ dependencies:
   - sphinx>=3.0
   - breathe>=4.15
   - sphinx_rtd_theme
+  # Benchmarking
+  - bazel  # For compiling google_benchmark
+  - pip
+  - pip:
+    - git+https://github.com/google/benchmark.git@v1.5.2
