@@ -25,8 +25,6 @@ include(cmake/Coverage.cmake)
 # Activate the Conan CMake wrapper (download if necessary).
 include(cmake/Conan.cmake)
 
-include(cmake/FindNumPy.cmake)
-
 # Ecole libraries
 add_subdirectory(libecole)
 add_subdirectory(python)

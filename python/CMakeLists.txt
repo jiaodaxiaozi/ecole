@@ -25,9 +25,9 @@ pybind11_add_module(
 
 target_include_directories(ecole-python PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/ecole/core)
 
-# Include the headers directly instead of using the CMake target due to it wrongly linking against
-# libpython
-target_include_directories(ecole-python SYSTEM PRIVATE "${NUMPY_INCLUDE_DIRS}")
+# From Scikit-build
+find_package(NumPy REQUIRED)
+target_include_directories(ecole-python SYSTEM PRIVATE "${NumPy_INCLUDE_DIR}")
 
 target_link_libraries(
 	ecole-python
