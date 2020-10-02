@@ -25,10 +25,7 @@ include(cmake/Coverage.cmake)
 # Activate the Conan CMake wrapper (download if necessary).
 include(cmake/Conan.cmake)
 
-# Find Python and create virtual environment for Ecole
-include(cmake/Python.cmake)
 include(cmake/FindNumPy.cmake)
-include(cmake/PythonVenv.cmake)
 
 # Ecole libraries
 add_subdirectory(libecole)

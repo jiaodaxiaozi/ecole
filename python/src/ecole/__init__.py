@@ -1,4 +1,4 @@
-__version__ = "@Ecole_VERSION@"  # Filled by CMake
+__version__ = "0.2.0"
 
 from ecole.core import RandomEngine, seed, spawn_random_engine, Exception
 
