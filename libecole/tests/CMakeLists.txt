@@ -23,6 +23,7 @@ add_executable(
 	src/reward/test-isdone.cpp
 	src/reward/test-nnodes.cpp
 
+	src/observation/test-constraint-matrix.cpp
 	src/observation/test-nodebipartite.cpp
 	src/observation/test-strongbranchingscores.cpp
 	src/observation/test-pseudocosts.cpp

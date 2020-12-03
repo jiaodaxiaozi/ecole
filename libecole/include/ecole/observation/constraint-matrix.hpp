@@ -9,12 +9,14 @@ namespace ecole::observation {
 
 class ConstraintMatrix : public ObservationFunction<utility::coo_matrix<double>> {
 public:
+	using value_type = double;
+
 	void before_reset(scip::Model& model) override;
 
-	auto extract(scip::Model& model, bool done) -> utility::coo_matrix<double> override;
+	auto extract(scip::Model& model, bool done) -> utility::coo_matrix<value_type> override;
 
 private:
-	utility::coo_matrix<double> constraint_matrix;
+	utility::coo_matrix<value_type> constraint_matrix;
 	bool on_reset = true;
 };
 
