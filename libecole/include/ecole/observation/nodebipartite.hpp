@@ -5,6 +5,7 @@
 #include <xtensor/xtensor.hpp>
 
 #include "ecole/observation/abstract.hpp"
+#include "ecole/observation/constraint-matrix.hpp"
 #include "ecole/utility/sparse-matrix.hpp"
 
 namespace ecole::observation {
@@ -52,7 +53,12 @@ public:
 
 class NodeBipartite : public ObservationFunction<std::optional<NodeBipartiteObs>> {
 public:
+	void before_reset(scip::Model& model) override;
+
 	std::optional<NodeBipartiteObs> extract(scip::Model& model, bool done) override;
+
+private:
+	ConstraintMatrix constraint_matrix_func;
 };
 
 }  // namespace ecole::observation

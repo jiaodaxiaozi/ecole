@@ -195,78 +195,23 @@ auto extract_row_feat(scip::Model const& model) {
 	return row_feat;
 }
 
-/****************************************
- *  Edge features extraction functions  *
- ****************************************/
-
-/**
- * Number of non zero element in the constraint matrix.
- *
- * Row are counted once per right hand side and once per left hand side.
- */
-auto matrix_nnz(scip::Model const& model) {
-	auto* const scip = model.get_scip_ptr();
-	std::size_t nnz = 0;
-	for (auto* row : model.lp_rows()) {
-		auto const row_size = static_cast<std::size_t>(SCIProwGetNLPNonz(row));
-		if (scip::get_unshifted_lhs(scip, row).has_value()) {
-			nnz += row_size;
-		}
-		if (scip::get_unshifted_rhs(scip, row).has_value()) {
-			nnz += row_size;
-		}
-	}
-	return nnz;
-}
-
-utility::coo_matrix<value_type> extract_edge_feat(scip::Model const& model) {
-	auto* const scip = model.get_scip_ptr();
-
-	using coo_matrix = utility::coo_matrix<value_type>;
-	auto const nnz = matrix_nnz(model);
-	auto values = decltype(coo_matrix::values)::from_shape({nnz});
-	auto indices = decltype(coo_matrix::indices)::from_shape({2, nnz});
-
-	std::size_t i = 0;
-	std::size_t j = 0;
-	for (auto* const row : model.lp_rows()) {
-		auto* const row_cols = SCIProwGetCols(row);
-		auto const* const row_vals = SCIProwGetVals(row);
-		auto const row_nnz = static_cast<std::size_t>(SCIProwGetNLPNonz(row));
-		if (scip::get_unshifted_lhs(scip, row).has_value()) {
-			for (std::size_t k = 0; k < row_nnz; ++k) {
-				indices(0, j + k) = i;
-				indices(1, j + k) = static_cast<std::size_t>(SCIPcolGetLPPos(row_cols[k]));
-				values[j + k] = -row_vals[k];
-			}
-			j += row_nnz;
-			i++;
-		}
-		if (scip::get_unshifted_rhs(scip, row).has_value()) {
-			for (std::size_t k = 0; k < row_nnz; ++k) {
-				indices(0, j + k) = i;
-				indices(1, j + k) = static_cast<std::size_t>(SCIPcolGetLPPos(row_cols[k]));
-				values[j + k] = row_vals[k];
-			}
-			j += row_nnz;
-			i++;
-		}
-	}
-
-	auto const n_rows = n_ineq_rows(model);
-	auto const n_cols = static_cast<std::size_t>(SCIPgetNLPCols(scip));
-	return {values, indices, {n_rows, n_cols}};
-}
-
 }  // namespace
 
 /*************************************
  *  Observation extracting function  *
  *************************************/
 
-auto NodeBipartite::extract(scip::Model& model, bool /* done */) -> std::optional<NodeBipartiteObs> {
+void NodeBipartite::before_reset(scip::Model& model) {
+	constraint_matrix_func.before_reset(model);
+}
+
+auto NodeBipartite::extract(scip::Model& model, bool done) -> std::optional<NodeBipartiteObs> {
 	if (model.get_stage() == SCIP_STAGE_SOLVING) {
-		return NodeBipartiteObs{extract_col_feat(model), extract_row_feat(model), extract_edge_feat(model)};
+		return NodeBipartiteObs{
+			extract_col_feat(model),
+			extract_row_feat(model),
+			constraint_matrix_func.extract(model, done),
+		};
 	}
 	return {};
 }
