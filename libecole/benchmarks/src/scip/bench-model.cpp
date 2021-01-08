@@ -51,8 +51,9 @@ BENCHMARK(ecole_reverse_control)  // NOLINT(cert-err58-cpp)
 
 auto scip_branchrule(benchmark::State& state) {
 	benchmark_solve(state, [](auto& model) {
-		auto branch_rule = std::make_unique<ecole::scip::IndexBranchrule>(model.get_scip_ptr(), "FirstVarBranching", 0UL);
-		SCIPincludeObjBranchrule(model.get_scip_ptr(), branch_rule.release(), true);
+		auto* branch_rule = new ecole::scip::IndexBranchrule{model.get_scip_ptr(), "FirstVarBranching", 0UL};
+		SCIPincludeObjBranchrule(model.get_scip_ptr(), branch_rule, true);
+		// NOLINTNEXTLINE dynamically allocated object ownership is given to SCIP
 		model.solve();
 	});
 }

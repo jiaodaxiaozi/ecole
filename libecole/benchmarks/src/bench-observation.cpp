@@ -17,14 +17,14 @@ template <typename ObsFunc> auto benchmark_observation(benchmark::State& state, 
 		model.solve_iter();
 
 		state.ResumeTiming();
-		func_to_bench.reset(model);
+		func_to_bench.before_reset(model);
 		state.PauseTiming();
 
 		while (!model.solve_iter_is_done()) {
 			model.solve_iter_branch(model.lp_branch_cands()[0]);
 
 			state.ResumeTiming();
-			benchmark::DoNotOptimize(func_to_bench.obtain_observation(model));
+			benchmark::DoNotOptimize(func_to_bench.extract(model, false));
 			state.PauseTiming();
 		}
 
