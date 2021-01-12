@@ -1,27 +1,8 @@
-import pathlib
-
 import google_benchmark as benchmark
 import pyscipopt
 
-import ecole
 from index_branchrule import IndexBranchrule
-
-
-TEST_SOURCE_DIR = pathlib.Path(__file__).parent.resolve()
-DATA_DIR = TEST_SOURCE_DIR / "../../libecole/tests/data"
-
-
-def get_model():
-    """Return a Model object with a valid problem."""
-    model = ecole.scip.Model.from_file(str(DATA_DIR / "bppc8-02.mps"))
-    model.disable_cuts()
-    model.disable_presolve()
-    model.set_param("randomization/permuteconss", True)
-    model.set_param("randomization/permutevars", True)
-    model.set_param("randomization/permutationseed", 784)
-    model.set_param("randomization/randomseedshift", 784)
-    model.set_param("randomization/lpseed", 784)
-    return model
+from utils import get_model
 
 
 def benchmark_model_solving(func_to_bench):
