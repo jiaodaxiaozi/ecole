@@ -47,12 +47,23 @@ macro(set_developer_defaults)
 	option(ENABLE_DOCUMENTATION "Build documentation with Doxygen and Sphinx" ON)
 	option(ENABLE_DOCUMENTATION_TESTING "Enable documentation testing" ON)
 
+	option(BUILD_TESTING "Build tests in Ecole" ON)
+endmacro()
+
+# Set of defaults for benchmarking Ecole
+macro(set_benchmark_defaults)
+	option(ENABLE_IPO "Enable Interprocedural Optimization, aka Link Time Optimization (LTO)" ON)
+	set_default_build_type(Release)
+
+	option(BUILD_TESTING "Build tests in Ecole" ON)
 endmacro()
 
 
 macro(set_defaults)
 	if(ECOLE_DEVELOPER)
 		set_developer_defaults()
+	elseif(ECOLE_BENCHMARK)
+		set_benchmark_defaults()
 	else()
 		set_user_defaults()
 	endif()
