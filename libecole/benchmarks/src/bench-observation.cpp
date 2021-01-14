@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <scip/scip.h>
 
+#include "ecole/observation/khalil-2016.hpp"
 #include "ecole/observation/nodebipartite.hpp"
 
 #include "utils.hpp"
@@ -36,10 +37,18 @@ template <typename ObsFunc> auto benchmark_observation(benchmark::State& state, 
 	state.counters["Nodes"] = Counter{static_cast<double>(n_nodes), Counter::kAvgIterations};
 }
 
-auto node_bipartite_episode(benchmark::State& state) {
+auto obs_NodeBipartite(benchmark::State& state) {
 	benchmark_observation(state, observation::NodeBipartite{});
 }
-BENCHMARK(node_bipartite_episode)  // NOLINT(cert-err58-cpp)
+BENCHMARK(obs_NodeBipartite)  // NOLINT(cert-err58-cpp)
+	->MeasureProcessCPUTime()
+	->UseRealTime()
+	->Unit(benchmark::kMillisecond);
+
+auto obs_Khalil2016(benchmark::State& state) {
+	benchmark_observation(state, observation::Khalil2016{});
+}
+BENCHMARK(obs_Khalil2016)  // NOLINT(cert-err58-cpp)
 	->MeasureProcessCPUTime()
 	->UseRealTime()
 	->Unit(benchmark::kMillisecond);
