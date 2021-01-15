@@ -15,19 +15,18 @@ template <typename ObsFunc> auto benchmark_observation(benchmark::State& state, 
 		state.PauseTiming();
 		auto model = get_model();
 
-		model.solve_iter();
-
 		state.ResumeTiming();
 		func_to_bench.before_reset(model);
-		benchmark::DoNotOptimize(func_to_bench.extract(model, false));
+
 		state.PauseTiming();
+		model.solve_iter();
 
 		while (!model.solve_iter_is_done()) {
-			model.solve_iter_branch(model.lp_branch_cands()[0]);
-
 			state.ResumeTiming();
 			benchmark::DoNotOptimize(func_to_bench.extract(model, false));
+
 			state.PauseTiming();
+			model.solve_iter_branch(model.lp_branch_cands()[0]);
 		}
 
 		n_nodes += SCIPgetNTotalNodes(model.get_scip_ptr());
