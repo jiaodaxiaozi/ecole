@@ -19,6 +19,7 @@ template <typename ObsFunc> auto benchmark_observation(benchmark::State& state, 
 
 		state.ResumeTiming();
 		func_to_bench.before_reset(model);
+		benchmark::DoNotOptimize(func_to_bench.extract(model, false));
 		state.PauseTiming();
 
 		while (!model.solve_iter_is_done()) {
