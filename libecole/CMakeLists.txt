@@ -113,3 +113,5 @@ set_target_properties(libecole PROPERTIES
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
 	add_subdirectory(tests)
 endif()
+
+add_subdirectory(benchmarks)
