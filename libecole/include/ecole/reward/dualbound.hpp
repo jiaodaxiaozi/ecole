@@ -12,6 +12,7 @@ public:
 
 private:
 	scip::double dual_bound_value = 0.0;
+//	scip::real dual_bound_value = Infinity;
 };
 
 }  // namespace ecole::reward
